@@ -1,6 +1,4 @@
 import Options from './lib/push_api/options'
-import DialogControl from './controls/dialog'
-import SettingsControl from './controls/settings'
 import Registration from './lib/push_api/registration'
 import Permission from './lib/push_api/permission'
 import Features from './lib/push_api/features'
@@ -25,12 +23,12 @@ const PerfectyPush = (() => {
       return false
     }
 
-    drawHtmlControls()
-
+    await Permission.askIfNotDenied()
     if (Permission.isGranted()) {
       Logger.info('The site has permissions granted')
       await checkInstallation()
       await checkRegistration()
+      await Registration.register()
     } else {
       Logger.info('The site has not permissions granted')
     }
@@ -45,13 +43,6 @@ const PerfectyPush = (() => {
    */
   const isSupportedAndEnabled = () => {
     return (Features.isSupported() && Options.enabled)
-  }
-
-  const drawHtmlControls = () => {
-    Logger.info('Drawing controls')
-
-    DialogControl.draw()
-    SettingsControl.draw()
   }
 
   const checkInstallation = async () => {
